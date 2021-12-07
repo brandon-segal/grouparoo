@@ -1,14 +1,15 @@
 import {
+  DataResponse,
   FilterOperation,
   MatchCondition,
 } from "@grouparoo/app-templates/dist/source/table";
 
 export function makeWhereClause(
   matchCondition: MatchCondition,
-  params: Array<any>
+  params: (DataResponse | DataResponse[])[]
 ) {
   const { columnName, filterOperation, value, values } = matchCondition;
-  let op;
+  let op: string;
   let match = values || value;
   let transform = null;
 

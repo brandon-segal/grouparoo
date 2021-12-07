@@ -8,6 +8,7 @@ import {
   AggregationMethod,
   GrouparooRecord,
   Property,
+  RecordPropertiesPluginMethodResponse,
   SimplePropertyOptions,
   SourceMapping,
 } from "@grouparoo/core";
@@ -494,7 +495,6 @@ describe("postgres/table/recordProperties", () => {
         });
 
         test("to get a timestamp - decimals or not", async () => {
-          const column = "stamp";
           const [values, properties] = await getPropertyValues({
             columns,
             sourceMapping,
@@ -1161,7 +1161,7 @@ describe("postgres/table/recordProperties", () => {
     });
 
     test("it will not import if the dependency is not ready", async () => {
-      const [values, properties] = await getPropertyValues({
+      const [values] = await getPropertyValues({
         columns: ["name"],
         sourceMapping: { id: "accountId" },
         aggregationMethod: "exact",
@@ -1190,7 +1190,7 @@ describe("postgres/table/recordProperties", () => {
       sourceOptions = { table: usersTableName };
     });
     test("unknown record property", async () => {
-      const [values, properties] = await getPropertyValues({
+      const [values] = await getPropertyValues({
         columns: ["first_name"],
         sourceMapping: { id: "badName" },
         aggregationMethod: "exact",
@@ -1200,7 +1200,7 @@ describe("postgres/table/recordProperties", () => {
       expect(values[thirdRecord.id]).toBeUndefined();
     });
     test("null record property", async () => {
-      const [values, properties] = await getPropertyValues({
+      const [values] = await getPropertyValues({
         columns: ["first_name"],
         sourceMapping: { id: "lastName" }, // set to NULL
         aggregationMethod: "exact",
@@ -1212,6 +1212,9 @@ describe("postgres/table/recordProperties", () => {
   });
 });
 
-function fixedLengthFloat(value: any, decimalDigits = 2) {
+function fixedLengthFloat(
+  value: Property[] | RecordPropertiesPluginMethodResponse,
+  decimalDigits = 2
+) {
   return parseFloat(parseFloat(value.toString()).toFixed(decimalDigits));
 }
