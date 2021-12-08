@@ -17,7 +17,7 @@ export interface PostgresPoolClient extends PoolClient {
 export const connect: ConnectPluginAppMethod = async ({ appOptions }) => {
   const formattedOptions: SimpleAppOptions & {
     ssl?: { rejectUnauthorized?: boolean } | boolean;
-  } = Object.assign({}, appOptions);
+  } = { ...appOptions };
 
   // ensure that the "ssl" option by itself, if present, is a boolean
   if (formattedOptions["ssl"]) {
@@ -74,16 +74,26 @@ export function formatAsText(text: string) {
 }
 
 export function formatInUtcDefault(text: string) {
-  if (!text) return null;
+  if (!text) {
+    return null;
+  }
   const zone = timeZoneOffset(text);
-  let date: Date = parseDate(text);
 
   if (!zone) {
-    const dateInUTC: Date = parseDate(text + "+00");
-    if (dateInUTC instanceof Date) date = dateInUTC;
+    const dateInUTC = parseDate(text + "+00");
+    if (dateInUTC instanceof Date) {
+      return dateInUTC;
+    }
   }
 
-  return date;
+  const date = parseDate(text);
+  if (date instanceof Date) {
+    return date;
+  }
+
+  throw new Error(
+    "date is of type " + typeof date + " and should be type Date"
+  );
 }
 
 // from parseDate library
