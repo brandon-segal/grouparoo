@@ -16,6 +16,8 @@ import {
   Import,
   Log,
   Notification,
+  Option,
+  OAuthRequest,
   Permission,
   GrouparooModel,
   GrouparooRecord,
@@ -56,6 +58,10 @@ export namespace Models {
   export type GroupRuleType = Partial<AsyncReturnType<GroupRule["apiData"]>>;
   export type ImportType = Partial<AsyncReturnType<Import["apiData"]>>;
   export type LogType = Partial<AsyncReturnType<Log["apiData"]>>;
+  export type OptionType = Partial<AsyncReturnType<Option["apiData"]>>;
+  export type OAuthRequestType = Partial<
+    AsyncReturnType<OAuthRequest["apiData"]>
+  >;
   export type NotificationType = Partial<
     AsyncReturnType<Notification["apiData"]>
   >;
