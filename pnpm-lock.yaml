@@ -763,10 +763,12 @@ importers:
   plugins/@grouparoo/google-sheets:
     specifiers:
       '@grouparoo/core': 0.7.7
+      '@grouparoo/csv': 0.7.7
       '@grouparoo/spec-helper': 0.7.7
       '@types/jest': '*'
       '@types/node': '*'
       actionhero: 28.0.3
+      csv-write-stream: 2.0.0
       dotenv: 10.0.0
       fs-extra: 10.0.0
       google-spreadsheet: 3.2.0
@@ -777,6 +779,8 @@ importers:
       type-fest: 2.8.0
       typescript: 4.5.2
     dependencies:
+      '@grouparoo/csv': link:../csv
+      csv-write-stream: 2.0.0
       google-spreadsheet: 3.2.0
     devDependencies:
       '@grouparoo/core': link:../../../core
@@ -4657,7 +4661,6 @@ packages:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
     dependencies:
       sprintf-js: 1.0.3
-    dev: true
 
   /argparse/2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -6073,6 +6076,15 @@ packages:
 
   /csv-stringify/6.0.4:
     resolution: {integrity: sha512-Z3EbRQWwkOV3Qc2fQnJmfjrxRgAwH9AncnNK2jmtTvBvFjj/hESZUGm42YvTh9kMw2OOGPHQn5Yt0EbqoRtUVQ==}
+    dev: false
+
+  /csv-write-stream/2.0.0:
+    resolution: {integrity: sha1-/C2iGkjW6l+MF/3jnPuRHk8CkrA=}
+    hasBin: true
+    dependencies:
+      argparse: 1.0.10
+      generate-object-property: 1.2.0
+      ndjson: 1.5.0
     dev: false
 
   /currency-codes/1.5.1:
@@ -7558,6 +7570,12 @@ packages:
       - supports-color
     dev: false
 
+  /generate-object-property/1.2.0:
+    resolution: {integrity: sha1-nA4cQDCM6AT0eDYYuTf6iPmdUNA=}
+    dependencies:
+      is-property: 1.0.2
+    dev: false
+
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -8569,6 +8587,10 @@ packages:
   /is-potential-custom-element-name/1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
     dev: true
+
+  /is-property/1.0.2:
+    resolution: {integrity: sha1-V/4cTkhHTt1lsJkR8msc1Ald2oQ=}
+    dev: false
 
   /is-regex/1.1.4:
     resolution: {integrity: sha512-kvRdxDsxZjhzUX07ZnLydzS1TU/TJlTUHHY4YLL87e37oUA49DfkLqgy+VjFocowy29cKvcSiu+kIv728jTTVg==}
@@ -10687,6 +10709,16 @@ packages:
     hasBin: true
     dev: false
     optional: true
+
+  /ndjson/1.5.0:
+    resolution: {integrity: sha1-rmA7NrE0vOw0e0UkIrC/mNWDLsg=}
+    hasBin: true
+    dependencies:
+      json-stringify-safe: 5.0.1
+      minimist: 1.2.5
+      split2: 2.2.0
+      through2: 2.0.5
+    dev: false
 
   /nearley/2.20.1:
     resolution: {integrity: sha512-+Mc8UaAebFzgV+KpI5n7DasuuQCHA89dmwm7JXw3TV43ukfNQ9DnBH3Mdb2g/I4Fdxc26pwimBWvjIw0UAILSQ==}
@@ -13932,6 +13964,12 @@ packages:
       through: 2.3.8
     dev: true
 
+  /split2/2.2.0:
+    resolution: {integrity: sha512-RAb22TG39LhI31MbreBgIuKiIKhVsawfTgEGqKHTK87aG+ul/PB8Sqoi3I7kVdRWiCfrKxK3uo4/YUkpNvhPbw==}
+    dependencies:
+      through2: 2.0.5
+    dev: false
+
   /split2/3.2.2:
     resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
     dependencies:
@@ -13939,7 +13977,6 @@ packages:
 
   /sprintf-js/1.0.3:
     resolution: {integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=}
-    dev: true
 
   /sprintf-js/1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
@@ -14486,7 +14523,6 @@ packages:
     dependencies:
       readable-stream: 2.3.7
       xtend: 4.0.2
-    dev: true
 
   /through2/4.0.2:
     resolution: {integrity: sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==}
