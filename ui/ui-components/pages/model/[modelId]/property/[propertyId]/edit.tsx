@@ -567,6 +567,7 @@ export default function Page(props) {
                                       </Badge>
                                     </h5>
                                   </td>
+                                  {/* key */}
                                   <td>
                                     <Form.Group
                                       controlId={`${localFilter.key}-key-${idx}`}
@@ -594,7 +595,7 @@ export default function Page(props) {
                                       </Form.Control>
                                     </Form.Group>
                                   </td>
-
+                                  {/* op */}
                                   <td>
                                     <Form.Group
                                       controlId={`${localFilter.key}-op-${idx}`}
@@ -602,7 +603,7 @@ export default function Page(props) {
                                       <Form.Control
                                         as="select"
                                         disabled={loading}
-                                        value={localFilter.op}
+                                        value={localFilter.op || ""}
                                         onChange={(e: any) => {
                                           const _localFilters = [
                                             ...localFilters,
@@ -631,7 +632,7 @@ export default function Page(props) {
                                       </Form.Control>
                                     </Form.Group>
                                   </td>
-
+                                  {/* match */}
                                   <td>
                                     {localFilter.key === "occurredAt" ? (
                                       <DatePicker
@@ -663,8 +664,15 @@ export default function Page(props) {
                                         <Form.Control
                                           required
                                           type="text"
-                                          disabled={loading}
-                                          value={localFilter.match.toString()}
+                                          disabled={
+                                            loading ||
+                                            localFilter.op.includes("exist")
+                                          }
+                                          value={
+                                            localFilter.match
+                                              ? localFilter.match.toString()
+                                              : ""
+                                          }
                                           onChange={(e: any) => {
                                             const _localFilter = [
                                               ...localFilters,
@@ -677,7 +685,7 @@ export default function Page(props) {
                                       </Form.Group>
                                     )}
                                   </td>
-
+                                  {/* delete */}
                                   <td>
                                     <Button
                                       variant="danger"
