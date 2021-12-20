@@ -15,7 +15,11 @@ export class ApiKeysList extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: { limit?: number; offset?: number };
+  }) {
     const total = await ApiKey.count();
 
     const apiKeys = await ApiKey.findAll({
@@ -45,7 +49,16 @@ export class ApiKeyCreate extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: {
+      name: string;
+      permissionAllRead?: string;
+      permissionAllWrite?: string;
+      permissions?: Array<{ topic: string; read: boolean; write: boolean }>;
+    };
+  }) {
     const apiKey = new ApiKey(params);
     await apiKey.save();
     if (params.permissions) await apiKey.setPermissions(params.permissions);
@@ -72,7 +85,19 @@ export class ApiKeyEdit extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: {
+      id: string;
+      name: string;
+      permissionAllRead?: string;
+      permissionAllWrite?: string;
+      disabledPermissionAllRead?: boolean;
+      disabledPermissionAllWrite?: boolean;
+      permissions?: Array<{ topic: string; read: boolean; write: boolean }>;
+    };
+  }) {
     const apiKey = await ApiKey.findById(params.id);
     const updateParams = Object.assign({}, params);
     if (params.disabledPermissionAllRead) {
@@ -101,7 +126,7 @@ export class ApiKeyView extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     const apiKey = await ApiKey.findById(params.id);
     return { apiKey: await apiKey.apiData() };
   }
@@ -119,7 +144,7 @@ export class ApiKeyDestroy extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     const apiKey = await ApiKey.findById(params.id);
     await apiKey.destroy();
     return { success: true };

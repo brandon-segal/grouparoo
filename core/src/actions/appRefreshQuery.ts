@@ -13,7 +13,7 @@ export class AppRefreshQueryRun extends AuthenticatedAction {
     this.permission = { topic: "app", mode: "write" };
     this.inputs = { id: { required: true } };
   }
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     let valueUpdated: Boolean = false;
     const appRefreshQuery = await AppRefreshQuery.findById(params.id);
     if (!appRefreshQuery)
@@ -57,16 +57,29 @@ export class AppRefreshQueryCreate extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: {
+      appId: string;
+      refreshQuery?: string;
+      recurringFrequency?: number;
+      state?: string;
+    };
+  }) {
     const appRefreshQuery = await AppRefreshQuery.create({
       appId: params.appId,
     });
-    if (params.refreshQuery)
+    if (params.refreshQuery) {
       await appRefreshQuery.update({ refreshQuery: params.refreshQuery });
-    if (params.recurringFrequency)
+    }
+
+    if (params.recurringFrequency) {
       await appRefreshQuery.update({
         recurringFrequency: params.recurringFrequency,
       });
+    }
+
     if (params.state) await appRefreshQuery.update({ state: params.state });
 
     await ConfigWriter.run();
@@ -84,13 +97,21 @@ export class AppRefreshQueryEdit extends AuthenticatedAction {
     this.permission = { topic: "app", mode: "write" };
     this.inputs = {
       id: { required: true },
-      appId: { required: false },
       refreshQuery: { required: false },
       recurringFrequency: { required: false },
       state: { required: false },
     };
   }
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: {
+      id: string;
+      refreshQuery?: string;
+      recurringFrequency?: number;
+      state?: string;
+    };
+  }) {
     const appRefreshQuery = await AppRefreshQuery.findById(params.id);
     await appRefreshQuery.update(params);
 
@@ -124,7 +145,11 @@ export class AppRefreshQueryTest extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({
+    params,
+  }: {
+    params: { id: string; refreshQuery?: string };
+  }) {
     const appRefreshQuery = await AppRefreshQuery.findById(params.id);
 
     const test = await appRefreshQuery.test(params.refreshQuery);
@@ -149,7 +174,7 @@ export class AppRefreshQueryView extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     const appRefreshQuery = await AppRefreshQuery.findById(params.id);
     return { appRefreshQuery: await appRefreshQuery.apiData() };
   }
@@ -167,7 +192,7 @@ export class AppRefreshQueryDestroy extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     const appRefreshQuery = await AppRefreshQuery.findById(params.id);
     await appRefreshQuery.destroy();
 

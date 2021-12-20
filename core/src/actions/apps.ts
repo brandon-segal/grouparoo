@@ -1,10 +1,11 @@
-import { api } from "actionhero";
 import { AuthenticatedAction } from "../classes/actions/authenticatedAction";
 import { App } from "../models/App";
-import { GrouparooPlugin, PluginApp } from "../classes/plugin";
 import { OptionHelper } from "../modules/optionHelper";
 import { ConfigWriter } from "../modules/configWriter";
 import { APIData } from "../modules/apiData";
+import { WhereAttributeHash, Order } from "sequelize";
+import { Action } from "actionhero";
+import { Input } from "actionhero/dist/classes/input";
 
 export class AppsList extends AuthenticatedAction {
   constructor() {
@@ -28,8 +29,12 @@ export class AppsList extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
-    const where = {};
+  async runWithinTransaction({
+    params,
+  }: {
+    params: { state?: string; limit?: number; offset?: number; order: Order };
+  }) {
+    const where: WhereAttributeHash = {};
 
     if (params.state) where["state"] = params.state;
     const total = await App.scope(null).count({ where });
@@ -60,7 +65,7 @@ export class AppOptions extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: { id: string } }) {
     const environmentVariableOptions =
       OptionHelper.getEnvironmentVariableOptionsForTopic("app");
     const app = await App.findById(params.id);
@@ -73,6 +78,18 @@ export class AppOptions extends AuthenticatedAction {
     };
   }
 }
+
+export type ParamsFromAction<T extends Action> =
+  // export type ParamsFromAction<T extends Action & { inputs: Action["inputs"] }> =
+  {
+    [Input in keyof T["inputs"]]: T["inputs"][Input]["formatter"] extends (
+      ...args: any[]
+    ) => any | Function
+      ? ReturnType<T["inputs"][Input]["formatter"]>
+      : string;
+  };
+
+type test = ParamsFromAction<AppOptions>;
 
 export class AppCreate extends AuthenticatedAction {
   constructor() {
@@ -89,10 +106,11 @@ export class AppCreate extends AuthenticatedAction {
     };
   }
 
-  async runWithinTransaction({ params }) {
+  async runWithinTransaction({ params }: { params: unknown }) {
     const app = await App.create({
       name: params.name,
       type: params.type,
+      foo: params.foo,
     });
 
     if (params.options) await app.setOptions(params.options);
